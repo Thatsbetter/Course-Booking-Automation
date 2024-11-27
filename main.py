@@ -6,11 +6,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-
+from credential import Credential
 
 def initialize_browser():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless=new")
+    # options.add_argument("--headless=new")
     options.add_argument("--window-size=1280,700")
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
@@ -22,11 +22,11 @@ def initialize_browser():
 
 
 with initialize_browser() as browser:
-    browser.get("https://buchung.hochschulsport-hamburg.de/angebote/Sommersemester_2024/_Beachvolleyball.html")
+    browser.get("https://buchung.hochschulsport-hamburg.de/angebote/Wintersemester_2024_2025/_Volleyball.html")
     time.sleep(1)
-    browser.find_element(By.NAME, 'BS_Kursid_77860').click()
-    time.sleep(1)
+    browser.find_element(By.NAME, 'BS_Kursid_78052').click()
     try:
+        cred = Credential()
         # Get the current window handles
         original_window = browser.current_window_handle
         window_handles = browser.window_handles
@@ -65,13 +65,13 @@ with initialize_browser() as browser:
         email_field = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/form/div/div[2]/div[1]/div[2]/div[2]/input"))
         )
-        email_field.send_keys("XXX")
+        email_field.send_keys(cred.get_username())
 
         # Input "user" into the password field using its custom attribute
         password_field = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/form/div/div[2]/div[1]/div[3]/div[2]/input"))
         )
-        password_field.send_keys("XXX")
+        password_field.send_keys(cred.get_password())
 
         confirm_login = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR,
@@ -83,13 +83,18 @@ with initialize_browser() as browser:
         confirm_AGB = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, "/html/body/form/div/div[3]/div[2]/label/input")))
         confirm_AGB.click()
-
-        final_submit = WebDriverWait(browser, 10).until(
+        time.sleep(1)
+        submit_form = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.XPATH, '//*[@id="bs_submit"]'))
+        )
+        submit_form.click()
+        time.sleep(1)
+        final_submit = WebDriverWait(browser, 10).until(
+            EC.presence_of_element_located((By.XPATH, '/html/body/form/div/div[3]/div[1]/div[2]'))
         )
         final_submit.click()
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
-    time.sleep(10)  # Optional: Wait for 5 seconds before closing the browser
+    time.sleep(2)  # Optional: Wait for 5 seconds before closing the browser
