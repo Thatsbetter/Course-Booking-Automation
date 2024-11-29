@@ -116,4 +116,4 @@ schedule.every().thursday.at(convert_to_server_time(21,1).strftime("%H:%M")).do(
 # Keep the script running
 while True:
     schedule.run_pending()
-    time.sleep(1)
+    time.sleep(60)
