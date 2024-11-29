@@ -116,4 +116,6 @@ schedule.every().thursday.at(convert_to_server_time(21,1).strftime("%H:%M")).do(
 # Keep the script running
 while True:
     schedule.run_pending()
+    if (datetime.now().minute == 0):
+        print(datetime.now())
     time.sleep(60)
